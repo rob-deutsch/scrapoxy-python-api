@@ -57,6 +57,9 @@ class BlacklistDownloaderMiddleware(object):
     def process_response(self, request, response, spider):
         """Detect blacklisted response and stop the instance if necessary.
         """
+        if 'x-cache-proxyname' not in response.headers:
+            return response
+        
         try:
             if response.status in self._http_status_codes:
                 raise BlacklistError(response, 'HTTP status {}'.format(response.status))
